@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Net;
 using Android.Content;
@@ -61,9 +60,9 @@ namespace Loscate.App.Droid
             return marker;
         }
 
-        private Android.Graphics.Bitmap GetImageBitmapFromUrl(string url)
+        private Bitmap GetImageBitmapFromUrl(string url)
         {
-            Android.Graphics.Bitmap imageBitmap = null;
+            Bitmap imageBitmap = null;
 
             using (var webClient = new WebClient())
             {
@@ -75,21 +74,6 @@ namespace Loscate.App.Droid
             }
 
             return imageBitmap;
-        }
-
-        public byte[] ImageToByteArray(System.Drawing.Image imageIn)
-        {
-            using (var ms = new MemoryStream())
-            {
-                imageIn.Save(ms, imageIn.RawFormat);
-                return ms.ToArray();
-            }
-        }
-
-        public Android.Graphics.Bitmap ByteArrayToImage(byte[] imageData)
-        {
-            var bmpOutput = BitmapFactory.DecodeByteArray(imageData, 0, imageData.Length);
-            return bmpOutput;
         }
 
         void OnInfoWindowClick(object sender, GoogleMap.InfoWindowClickEventArgs e)

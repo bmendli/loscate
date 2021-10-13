@@ -14,7 +14,8 @@ namespace Loscate.App
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            MainPage = new AppShell();
+            // MainPage = new AppShell();
+            MainPage = new LoginPage();
         }
 
         protected override void OnStart()
@@ -23,6 +24,7 @@ namespace Loscate.App
 
         protected override void OnSleep()
         {
+            
         }
 
         protected override void OnResume()

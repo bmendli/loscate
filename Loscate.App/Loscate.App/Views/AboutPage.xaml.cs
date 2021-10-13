@@ -1,5 +1,6 @@
 ﻿using Loscate.App.Map;
 using System.Collections.Generic;
+using System.Reflection;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -10,12 +11,14 @@ namespace Loscate.App.Views
         public AboutPage()
         {
             InitializeComponent();
+
             CustomMap customMap = new CustomMap
             {
-                MapType = MapType.Street
+                MapType = MapType.Street,
+                IsShowingUser = true
             };
-            Content = customMap;
 
+            Content = customMap;
 
             CustomPin pin = new CustomPin
             {

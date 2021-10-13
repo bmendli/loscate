@@ -5,6 +5,17 @@ using Android.Content.PM;
 using Android.Runtime;
 using Android.OS;
 using Android;
+using Android.Gms.Auth.Api.SignIn;
+using Android.Gms.Common.Apis;
+using Android.Gms.Auth.Api;
+using Android.Content;
+using Firebase;
+using Firebase.Auth;
+using Loscate.App.Droid.Service;
+using Android.Gms.Extensions;
+using System.Threading.Tasks;
+using Loscate.App.Services;
+using Xamarin.Forms;
 
 namespace Loscate.App.Droid
 {
@@ -12,6 +23,12 @@ namespace Loscate.App.Droid
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         const int RequestLocationId = 0;
+        GoogleSignInOptions gso;
+        GoogleApiClient googleApiClient;
+        FirebaseAuth firebaseAuth;
+        FirebaseAuthentication firebaseAuthManager;
+
+        IdTokenListener idTokenListener = new IdTokenListener();
 
         readonly string[] LocationPermissions =
         {
@@ -25,8 +42,76 @@ namespace Loscate.App.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             Xamarin.FormsMaps.Init(this, savedInstanceState);
+
+            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DefaultSignIn)
+                .RequestIdToken("563040333393-nh05lvif64909jvvfhu0r1hq7f2t15nt.apps.googleusercontent.com")
+                .RequestEmail()
+                .Build();
+
+            googleApiClient = new GoogleApiClient.Builder(this)
+                .AddApi(Auth.GOOGLE_SIGN_IN_API, gso).Build();
+            googleApiClient.Connect();
+
+            firebaseAuth = GetFirebaseAuth();
+
+
+            FirebaseAuth.Instance.AddIdTokenListener(idTokenListener);
+            idTokenListener.IdTokenChanged += OnIdTokenChanged;
+
+            firebaseAuthManager = (FirebaseAuthentication)DependencyService.Get<IFirebaseAuthenticator>();
+            firebaseAuthManager.SignInAction = SignIn;
+            firebaseAuthManager.SignOutAction = SignOut;
+
+
             LoadApplication(new App());
         }
+
+        private void OnIdTokenChanged(object sender, IdTokenListener.TokenChangedEventArgs e)
+        {
+            firebaseAuthManager.token = e.Token;
+            Console.WriteLine("TokenChanged: " + e.Token);
+        }
+
+
+        private void SignIn()
+        {
+            if (firebaseAuth.CurrentUser == null)
+            {
+                var intent = Auth.GoogleSignInApi.GetSignInIntent(googleApiClient);
+                StartActivityForResult(intent, 1);
+            }
+        }
+
+        private void SignOut()
+        {
+            firebaseAuth.SignOut();
+        }
+
+        private FirebaseAuth GetFirebaseAuth()
+        {
+            var app = FirebaseApp.InitializeApp(this);
+            FirebaseAuth mAuth;
+
+            if (app == null)
+            {
+                var options = new FirebaseOptions.Builder()
+                    .SetProjectId("loscate")
+                    .SetApplicationId("loscate")
+                    .SetApiKey("AIzaSyCpm_bIDe1uRtMikNuvHnvy8uCi8boczck")
+                    .SetDatabaseUrl("https://loginwith-79490.firebaseio.com")
+                    .SetStorageBucket("loscate.appspot.com")
+                    .Build();
+
+                app = FirebaseApp.InitializeApp(this, options);
+                mAuth = FirebaseAuth.Instance;
+            }
+            else
+            {
+                mAuth = FirebaseAuth.Instance;
+            }
+            return mAuth;
+        }
+
         protected override void OnStart()
         {
             base.OnStart();
@@ -43,6 +128,34 @@ namespace Loscate.App.Droid
                 }
             }
         }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            if (requestCode == 1)
+            {
+                GoogleSignInResult result = Auth.GoogleSignInApi.GetSignInResultFromIntent(data);
+                if (result.IsSuccess)
+                {
+                    GoogleSignInAccount account = result.SignInAccount;
+                    LoginWithFirebase(account);
+                }
+            }
+        }
+
+        private void LoginWithFirebase(GoogleSignInAccount account)
+        {
+            var credentials = GoogleAuthProvider.GetCredential(account.IdToken, null);
+            firebaseAuth.SignInWithCredential(credentials);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            Xamarin.Essentials.Platform.OnResume();
+        }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             if (requestCode == RequestLocationId)

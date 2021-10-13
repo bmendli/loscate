@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "563040333393",
+    "project_id": "loscate",
+    "storage_bucket": "loscate.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:563040333393:android:34b2926423aab036139270",
+        "android_client_info": {
+          "package_name": "com.spbstu.loscate.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "563040333393-v405lp3gg45phrh4qo654peaaaaofh75.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spbstu.loscate.app",
+            "certificate_hash": "2ae789db527c978b8d807e64512a8e10a1b7f76f"
+          }
+        },
+        {
+          "client_id": "563040333393-f4h1uu4mmnhprc8hff8qa7daqti9raoe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpm_bIDe1uRtMikNuvHnvy8uCi8boczck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "563040333393-f4h1uu4mmnhprc8hff8qa7daqti9raoe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

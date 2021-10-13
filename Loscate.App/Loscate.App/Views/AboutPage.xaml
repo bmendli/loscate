@@ -10,15 +10,10 @@
     <ContentPage.BindingContext>
         <vm:AboutViewModel />
     </ContentPage.BindingContext>
-    
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="Accent">#96d1ff</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-
-    <Grid>
-        <local:CustomMap x:Name="customMap" MapType="Street" IsShowingUser="True"/>
-    </Grid>
-
 </ContentPage>
