@@ -12,7 +12,7 @@ namespace Loscate.Site.Controllers.User
         [HttpGet]
         public FirebaseUser Get()
         {
-            return UserUtilities.GetFirebaseUser(User);
+            return User.ToFirebaseUser();
         }
     }
 }

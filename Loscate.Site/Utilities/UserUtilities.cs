@@ -8,7 +8,11 @@ namespace Loscate.Site.Utilities
 {
     public static class UserUtilities
     {
-        public static FirebaseUser GetFirebaseUser(ClaimsPrincipal user)
+        public static FirebaseUser ToFirebaseUser(this ClaimsPrincipal user)
+        {
+            return GetFirebaseUser(user);
+        }
+        private static FirebaseUser GetFirebaseUser(ClaimsPrincipal user)
         {
             if (user != null)
             {

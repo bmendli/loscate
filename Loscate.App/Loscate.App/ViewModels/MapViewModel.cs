@@ -5,11 +5,10 @@ using Xamarin.Forms;
 
 namespace Loscate.App.ViewModels
 {
-    public class AboutViewModel : BaseViewModel
+    public class MapViewModel : BaseViewModel
     {
-        public AboutViewModel()
+        public MapViewModel()
         {
-            Title = "About";
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
         }
 

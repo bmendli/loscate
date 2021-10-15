@@ -1,4 +1,5 @@
-﻿using Loscate.App.Services;
+﻿using Firebase.Auth;
+using Loscate.App.Services;
 using System;
 using Xamarin.Forms;
 
@@ -10,8 +11,10 @@ namespace Loscate.App.Droid.Service
     public class FirebaseAuthentication : IFirebaseAuthenticator
     {
         public string token;
+        public FirebaseAuth firebaseAuth;
         public Action SignInAction;
         public Action SignOutAction;
+        public Action OnTokenChange;
 
         public void SignIn()
         {
@@ -26,6 +29,21 @@ namespace Loscate.App.Droid.Service
         public string GetAuthToken()
         {
             return token;
+        }
+
+        public bool IsHaveUser()
+        {
+            return firebaseAuth.CurrentUser != null;
+        }
+
+        public void SubscribeToTokenUpdate(Action action)
+        {
+            OnTokenChange += action;
+        }
+
+        public void UnSubscribeToTokenUpdate(Action action)
+        {
+            OnTokenChange -= action;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Loscate.DTO.Map;
 using System.Net;
 using Android.Content;
 using Android.Gms.Maps;
@@ -10,8 +11,8 @@ using Android.Widget;
 using Loscate.App.Droid;
 using Loscate.App.Map;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.Android;
+using Xamarin.Forms.Maps;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace Loscate.App.Droid

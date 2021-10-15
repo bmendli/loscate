@@ -2,13 +2,28 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:viewmodels="clr-namespace:Loscate.App.ViewModels" 
+             x:DataType="viewmodels:LoginViewModel"
              mc:Ignorable="d"
              x:Class="Loscate.App.Views.LoginPage"
              Shell.NavBarIsVisible="False">
     <ContentPage.Content>
         <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+
+            <Image Source="profile_ico.png"></Image>
+            <Label Text="Войти в профиль" HorizontalOptions="Center" FontSize="Large"></Label>
+            <Label Text="Войдите в профиль, что бы просматривать потерянные вещи" HorizontalTextAlignment="Center" HorizontalOptions="Center" FontSize="Medium"></Label>
+
+            <Frame CornerRadius="3" BackgroundColor="White" HeightRequest="60" Margin="20" Padding="0" HasShadow="false" BorderColor="Black">
+                <StackLayout Orientation="Horizontal" Padding="10" Spacing="20">
+                    <Image HeightRequest="80" Aspect="AspectFill" Source="google_ico.png" />
+                    <Label Text="Войти через Google+" VerticalOptions="CenterAndExpand" FontSize="16" FontAttributes="Bold" TextColor="Gray"/>
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoogleSignInCommand}" />
+                    </StackLayout.GestureRecognizers>
+                </StackLayout>
+            </Frame>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

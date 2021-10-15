@@ -5,12 +5,12 @@ using Xamarin.Forms.Xaml;
 namespace Loscate.App.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage
+    public partial class RegistrationPage : ContentPage
     {
-        public LoginPage()
+        public RegistrationPage()
         {
             InitializeComponent();
-            this.BindingContext = new LoginViewModel();
+            this.BindingContext = new RegistrationViewModel();
         }
     }
 }

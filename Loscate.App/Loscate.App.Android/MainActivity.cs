@@ -52,15 +52,18 @@ namespace Loscate.App.Droid
                 .AddApi(Auth.GOOGLE_SIGN_IN_API, gso).Build();
             googleApiClient.Connect();
 
+
             firebaseAuth = GetFirebaseAuth();
 
-
             FirebaseAuth.Instance.AddIdTokenListener(idTokenListener);
+           
             idTokenListener.IdTokenChanged += OnIdTokenChanged;
 
             firebaseAuthManager = (FirebaseAuthentication)DependencyService.Get<IFirebaseAuthenticator>();
+
             firebaseAuthManager.SignInAction = SignIn;
             firebaseAuthManager.SignOutAction = SignOut;
+            firebaseAuthManager.firebaseAuth = firebaseAuth;
 
 
             LoadApplication(new App());
@@ -68,8 +71,9 @@ namespace Loscate.App.Droid
 
         private void OnIdTokenChanged(object sender, IdTokenListener.TokenChangedEventArgs e)
         {
-            firebaseAuthManager.token = e.Token;
             Console.WriteLine("TokenChanged: " + e.Token);
+            firebaseAuthManager.token = e.Token;
+            firebaseAuthManager.OnTokenChange?.Invoke();
         }
 
 

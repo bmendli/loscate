@@ -7,87 +7,64 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Newtonsoft.Json;
+using Loscate.App.Utilities;
 
 namespace Loscate.App.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
+        public Command GoogleSignInCommand { get; }
+        public Command SignInCommand { get; }
+        public Command SignOutCommand { get; }
 
-        public Command LoginCommand { get; }
 
+        private readonly IFirebaseAuthenticator firebaseAuth;
+        public bool IsBusy { get; set; }
 
-        private IFirebaseAuthenticator firebaseAuth;
 
         public LoginViewModel()
         {
-            LoginCommand = new Command(OnLoginClicked);
+            GoogleSignInCommand = new Command(GoogleSignIn, () => !IsBusy);
 
             firebaseAuth = DependencyService.Get<IFirebaseAuthenticator>();
+            firebaseAuth.SubscribeToTokenUpdate(TokenUpdate);
+        }
+
+        private async void Login()
+        {
+            if(string.IsNullOrEmpty(firebaseAuth.GetAuthToken()))
+            {
+                IsBusy = false;
+                return;
+            }
+            try
+            {
+                var userRequest = new ApiRequest(firebaseAuth, "api/user/getFirebaseUser");
+                var responseJson = await userRequest.Run();
+                var user = JsonConvert.DeserializeObject<FirebaseUser>(responseJson);
+                // firebaseAuth.UnSubscribeToTokenUpdate(TokenUpdate);
+                Device.BeginInvokeOnMainThread(() => Application.Current.MainPage = new AppShell(user));
+                Device.BeginInvokeOnMainThread(() => Shell.Current.GoToAsync("//main"));
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Ошибка входа", e.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private void TokenUpdate()
+        {
+            Login();
+        }
+
+        private void GoogleSignIn()
+        {
+            IsBusy = true;
             firebaseAuth.SignIn();
         }
-
-        private async void OnLoginClicked(object obj)
-        {
-            //// Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
-            //await Shell.Current.GoToAsync($"//{nameof(AboutPage)}");
-
-            try
-            {
-                var response = await GetInfo(firebaseAuth.GetAuthToken(), "api/user/getFirebaseUser");
-                var user = JsonConvert.DeserializeObject<FirebaseUser>(response);
-
-                await Application.Current.MainPage.DisplayAlert("Info", "Welcome " + user.Name, "OK");
-            }
-            catch(Exception e)
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", e.Message, "OK");
-            }
-            
-            // App.Current.MainPage = new AppShell();
-        }
-
-        public async Task<string> TryGetInfo(string authorizeToken, string url)
-        {
-            try
-            {
-                return await GetInfo(authorizeToken, url);
-            }
-            catch (AccessViolationException)
-            {
-                firebaseAuth.SignIn();
-                return await GetInfo(authorizeToken, url);
-            }
-        }
-
-        public async Task<string> GetInfo(string authorizeToken, string url)
-        {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authorizeToken);
-                client.BaseAddress = new Uri("https://loscate.site/");
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage response = new HttpResponseMessage();
-
-                response = await client.GetAsync(url).ConfigureAwait(false);
-
-
-                // Verification  
-                if (response.IsSuccessStatusCode)
-                {
-                     var content = await response.Content.ReadAsStringAsync();
-
-                    return content;
-                }
-                else if(response.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    throw new AccessViolationException();
-                }
-                else
-                {
-                    throw new WebException("wrong status responce status code");
-                }
-            }
-        }
-
     }
 }

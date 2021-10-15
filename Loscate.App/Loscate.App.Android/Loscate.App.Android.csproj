@@ -33,6 +33,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+    <MandroidI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,11 +64,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="PropertyChanged.Fody">
+      <Version>3.4.0</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v4">
       <Version>28.0.0.3</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.CommunityToolkit">
+      <Version>1.2.0</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Firebase.Auth">
-      <Version>121.0.1.1</Version>
+      <Version>121.0.1.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2125" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
@@ -71,10 +82,11 @@
       <Version>5.0.0.2125</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Auth">
-      <Version>117.6.0.1</Version>
+      <Version>119.2.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Renderers\CustomEditorRenderer.cs" />
     <Compile Include="Service\Auth\IdTokenListener.cs" />
     <Compile Include="Map\CustomMapRenderer.cs" />
     <Compile Include="MainActivity.cs" />
@@ -89,6 +101,7 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ic_scrolldown.png" />
     <AndroidResource Include="Resources\values\styles.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\icon.xml" />
@@ -108,6 +121,10 @@
     <AndroidResource Include="Resources\drawable\icon_feed.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Loscate.DTO\Loscate.DTO.csproj">
+      <Project>{bb2fd995-9ebc-4552-8b29-240a04ab2a46}</Project>
+      <Name>Loscate.DTO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Loscate.App\Loscate.App.csproj">
       <Project>{13559A70-2FEC-4653-BB79-1D11C8E13ED6}</Project>
       <Name>Loscate.App</Name>
@@ -117,6 +134,24 @@
     <AndroidResource Include="Resources\layout\XamarinMapInfoWindow.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\profile_ico.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\chat_ico.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\map_ico.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\google_ico.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\logout.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

@@ -1,15 +1,6 @@
-﻿using Android.App;
-using Android.Content;
-using Android.Gms.Extensions;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Gms.Extensions;
 using Firebase.Auth;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Loscate.App.Droid
 {
@@ -23,11 +14,17 @@ namespace Loscate.App.Droid
         }
         public void OnIdTokenChanged(FirebaseAuth auth)
         {
-            auth.CurrentUser.GetIdToken(false).AsAsync<GetTokenResult>().ContinueWith((task) =>
+            if(auth.CurrentUser == null)
             {
-                IdTokenChanged?.Invoke(this, new TokenChangedEventArgs { Token = task.Result.Token });
-            });
-
+                IdTokenChanged?.Invoke(this, new TokenChangedEventArgs { Token = string.Empty });
+            }
+            else
+            {
+                auth.CurrentUser.GetIdToken(false).AsAsync<GetTokenResult>().ContinueWith((task) =>
+                {
+                    IdTokenChanged?.Invoke(this, new TokenChangedEventArgs { Token = task.Result.Token });
+                });
+            }
         }
 
     }

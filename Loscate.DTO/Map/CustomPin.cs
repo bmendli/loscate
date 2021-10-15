@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms.Maps;
 
-namespace Loscate.App.Map
+namespace Loscate.DTO.Map
 {
     public class CustomPin : Pin
     {

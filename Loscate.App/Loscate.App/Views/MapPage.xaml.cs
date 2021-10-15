@@ -1,4 +1,5 @@
 ﻿using Loscate.App.Map;
+using Loscate.DTO.Map;
 using System.Collections.Generic;
 using System.Reflection;
 using Xamarin.Forms;
@@ -6,9 +7,9 @@ using Xamarin.Forms.Maps;
 
 namespace Loscate.App.Views
 {
-    public partial class AboutPage : ContentPage
+    public partial class MapPage : ContentPage
     {
-        public AboutPage()
+        public MapPage()
         {
             InitializeComponent();
 
