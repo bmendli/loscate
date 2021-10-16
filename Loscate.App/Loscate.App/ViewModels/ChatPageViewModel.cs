@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Loscate.App.ApiRequests.Social.Dialog;
+using Loscate.App.ApiRequests.Social.Message;
 using Loscate.App.Models;
+using Loscate.App.Services;
+using Loscate.DTO.Firebase;
 using Xamarin.Forms;
 
 namespace Loscate.App.ViewModels
 {
+    [QueryProperty(nameof(CompanionUserUID), nameof(CompanionUserUID))]
+    [QueryProperty(nameof(CompanionName), nameof(CompanionName))]
     public class ChatPageViewModel: INotifyPropertyChanged
     {
-        public string UserName { get; set; } = "1kvin";
+        private readonly IFirebaseAuthenticator firebaseAuthenticator;
+        public string CompanionUserUID { get; set; }
+        public string CompanionName { get; set; } = "No Name";
         public bool ShowScrollTap { get; set; } = false;
         public bool LastMessageVisible { get; set; } = true;
         public int PendingMessageCount { get; set; } = 0;
@@ -22,33 +32,16 @@ namespace Loscate.App.ViewModels
         public ICommand OnSendCommand { get; set; }
         public ICommand MessageAppearingCommand { get; set; }
         public ICommand MessageDisappearingCommand { get; set; }
+        
+        public Command LoadMessageCommand { get; }
 
         public ChatPageViewModel()
         {
-            Messages.Insert(0,new Message() { Text = "Hi" });
-            Messages.Insert(0, new Message() { Text = "How are you?", User = "testUser"});
-            Messages.Insert(0, new Message() { Text = "What's new?" });
-            Messages.Insert(0, new Message() { Text = "How is your family", User = "testUser" });
-            Messages.Insert(0, new Message() { Text = "How is your dog?", User = "testUser" });
-            Messages.Insert(0, new Message() { Text = "How is your cat?", User = "testUser" });
-            Messages.Insert(0, new Message() { Text = "How is your sister?" });
-            Messages.Insert(0, new Message() { Text = "When we are going to meet?" });
-            Messages.Insert(0, new Message() { Text = "I want to buy a laptop" });
-            Messages.Insert(0, new Message() { Text = "Where I can find a good one?" });
-            Messages.Insert(0, new Message() { Text = "Also I'm testing this chat" });
-            Messages.Insert(0, new Message() { Text = "Oh My God!" });
-            Messages.Insert(0, new Message() { Text = " No Problem" , User ="testUser"});
-            Messages.Insert(0, new Message() { Text = "Hugs and Kisses", User = "testUser" });
-            Messages.Insert(0, new Message() { Text = "When we are going to meet?" });
-            Messages.Insert(0, new Message() { Text = "I want to buy a laptop" });
-            Messages.Insert(0, new Message() { Text = "Where I can find a good one?" });
-            Messages.Insert(0, new Message() { Text = "Also I'm testing this chat" });
-            Messages.Insert(0, new Message() { Text = "Oh My God!" });
-            Messages.Insert(0, new Message() { Text = " No Problem" });
-            Messages.Insert(0, new Message() { Text = "Hugs and Kisses" });
+            firebaseAuthenticator = DependencyService.Get<IFirebaseAuthenticator>();
 
             MessageAppearingCommand = new Command<Message>(OnMessageAppearing);
             MessageDisappearingCommand = new Command<Message>(OnMessageDisappearing);
+            LoadMessageCommand = new Command(async () => await ExecuteLoadMessageCommand());
 
             OnSendCommand = new Command(() =>
             {
@@ -56,10 +49,8 @@ namespace Loscate.App.ViewModels
                     Messages.Insert(0, new Message() { Text = TextToSend, User = "testUser" });
                     TextToSend = string.Empty;
                 }
-               
             });
 
-            //Code to simulate reveing a new message procces
             // Device.StartTimer(TimeSpan.FromSeconds(5), () =>
             // {
             //     if (LastMessageVisible)
@@ -75,6 +66,29 @@ namespace Loscate.App.ViewModels
             // });
         }
         
+        async Task ExecuteLoadMessageCommand()
+        {
+            try
+            {
+                Messages.Clear();
+
+                var messages = await MessageRequests.GetUserMessage(firebaseAuthenticator, CompanionUserUID);
+                foreach (var message in messages)
+                {
+                    Messages.Insert(0, new Message() { Text = message.Text, User = message.SendUser.Name });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        public void OnAppearing()
+        {   
+            LoadMessageCommand.Execute(null);
+        }
+
         void OnMessageAppearing(Message message)
         {
             var idx = Messages.IndexOf(message);

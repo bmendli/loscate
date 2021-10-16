@@ -4,6 +4,8 @@ using Loscate.App.Views;
 using Loscate.DTO.Firebase;
 using Newtonsoft.Json;
 using System;
+using Loscate.App.ApiRequests;
+using Loscate.App.ApiRequests.User;
 using Xamarin.Forms;
 
 namespace Loscate.App
@@ -25,9 +27,7 @@ namespace Loscate.App
         {
             try
             {
-                var userRequest = new ApiRequest(firebaseAuth, "api/user/getFirebaseUser");
-                var responseJson = await userRequest.Run();
-                var user = JsonConvert.DeserializeObject<FirebaseUser>(responseJson);
+                var user = await UserRequests.GetUser(firebaseAuth);
                 firebaseAuth.UnSubscribeToTokenUpdate(TokenUpdate);
                 Device.BeginInvokeOnMainThread(() => Application.Current.MainPage = new AppShell(user));
             }

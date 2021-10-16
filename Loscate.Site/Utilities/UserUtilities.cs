@@ -26,7 +26,7 @@ namespace Loscate.Site.Utilities
                     var firebaseUser = JObject.Parse(user.Claims.SingleOrDefault(x => x.Type == "firebase")?.Value);
                     var email = firebaseUser["identities"]["email"][0].ToString();
 
-                    return new FirebaseUser(uid, name, email, pictureUrl, false);
+                    return new FirebaseUser(uid, name, email, pictureUrl);
                 }
                 throw new NullReferenceException("null user identity");
             }

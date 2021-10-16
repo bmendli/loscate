@@ -7,17 +7,14 @@
              xmlns:controls="clr-namespace:Loscate.App.Controls;assembly=Loscate.App"
              xmlns:local="clr-namespace:Loscate.App.Utilities;assembly=Loscate.App" 
              x:Class="Loscate.App.Views.ChatPage"
-             Title="{Binding UserName}">
+             Title="{Binding CompanionName}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <utilities:ChatTemplateSelector x:Key="MessageTemplateSelector"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="logout.png" Command="{Binding SignOutCommand}" />
-    </ContentPage.ToolbarItems>
     <Grid RowSpacing="0" 
-           ColumnSpacing="0" BackgroundColor="#EBF0F4">
+          ColumnSpacing="0" BackgroundColor="#EBF0F4">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="1" />

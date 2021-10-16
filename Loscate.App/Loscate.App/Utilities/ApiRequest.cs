@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Loscate.App.Utilities
 {
@@ -19,6 +20,13 @@ namespace Loscate.App.Utilities
             this.firebaseAuth = firebaseAuthenticator;
             this.authorizeToken = firebaseAuthenticator.GetAuthToken();
             this.url = url;
+        }
+        
+        public static async Task<T> MakeRequest<T>(IFirebaseAuthenticator firebaseAuthenticator, string url)
+        {
+            var request = new ApiRequest(firebaseAuthenticator, url);
+            var responseJson = await request.Run();
+            return JsonConvert.DeserializeObject<T>(responseJson);
         }
 
         public async Task<string> Run()

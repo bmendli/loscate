@@ -12,12 +12,19 @@ namespace Loscate.App.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChatPage : ContentPage
     {
+        private readonly ChatPageViewModel chatPageViewModel;
         public ChatPage()
         {
             InitializeComponent();
-            this.BindingContext = new ChatPageViewModel();
+            this.BindingContext = chatPageViewModel = new ChatPageViewModel();
         }
-        
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            chatPageViewModel.OnAppearing();
+        }
+
         public void ScrollTap(object sender, System.EventArgs e)
         {
             lock (new object())

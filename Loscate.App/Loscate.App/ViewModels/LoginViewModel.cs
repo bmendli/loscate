@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Loscate.App.ApiRequests;
+using Loscate.App.ApiRequests.User;
 using Xamarin.Forms;
 using Newtonsoft.Json;
 using Loscate.App.Utilities;
@@ -39,9 +41,8 @@ namespace Loscate.App.ViewModels
             }
             try
             {
-                var userRequest = new ApiRequest(firebaseAuth, "api/user/getFirebaseUser");
-                var responseJson = await userRequest.Run();
-                var user = JsonConvert.DeserializeObject<FirebaseUser>(responseJson);
+                var user = await UserRequests.GetUser(firebaseAuth);
+
                 // firebaseAuth.UnSubscribeToTokenUpdate(TokenUpdate);
                 Device.BeginInvokeOnMainThread(() => Application.Current.MainPage = new AppShell(user));
                 Device.BeginInvokeOnMainThread(() => Shell.Current.GoToAsync("//main"));

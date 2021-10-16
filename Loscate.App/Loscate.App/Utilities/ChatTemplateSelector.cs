@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Loscate.App.Utilities
 {
-    public class ChatTemplateSelector: DataTemplateSelector
+    public class ChatTemplateSelector : DataTemplateSelector
     {
         DataTemplate incomingDataTemplate;
         DataTemplate outgoingDataTemplate;
@@ -21,8 +21,8 @@ namespace Loscate.App.Utilities
             if (messageVm == null)
                 return null;
 
-          
-            return (messageVm.User == "testUser")? outgoingDataTemplate: incomingDataTemplate;
+
+            return (messageVm.User == "testUser") ? outgoingDataTemplate : incomingDataTemplate;
         }
     }
 }

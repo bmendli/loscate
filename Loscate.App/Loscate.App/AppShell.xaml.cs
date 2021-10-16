@@ -25,6 +25,7 @@ namespace Loscate.App
             Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
             Routing.RegisterRoute(nameof(MapPage), typeof(MapPage));
             Routing.RegisterRoute(nameof(MyProfilePage), typeof(MyProfilePage));
+            Routing.RegisterRoute(nameof(DialogsPage), typeof(DialogsPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
         }
 
