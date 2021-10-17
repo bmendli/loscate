@@ -16,8 +16,6 @@ namespace Loscate.App.ViewModels
     public class LoginViewModel : BaseViewModel
     {
         public Command GoogleSignInCommand { get; }
-        public Command SignInCommand { get; }
-        public Command SignOutCommand { get; }
 
 
         private readonly IFirebaseAuthenticator firebaseAuth;

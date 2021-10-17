@@ -1,18 +1,23 @@
 ﻿using Loscate.App.Models;
+using Loscate.App.Repository;
 using Loscate.App.Views.Cells;
+using Nancy.TinyIoc;
 using Xamarin.Forms;
 
 namespace Loscate.App.Utilities
 {
     public class ChatTemplateSelector : DataTemplateSelector
     {
-        DataTemplate incomingDataTemplate;
-        DataTemplate outgoingDataTemplate;
+        private readonly UserRepository userRepository;
+        private DataTemplate incomingDataTemplate;
+        private DataTemplate outgoingDataTemplate;
 
         public ChatTemplateSelector()
         {
             this.incomingDataTemplate = new DataTemplate(typeof(IncomingViewCell));
             this.outgoingDataTemplate = new DataTemplate(typeof(OutgoingViewCell));
+            
+            userRepository = TinyIoCContainer.Current.Resolve<UserRepository>();
         }
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
@@ -22,7 +27,8 @@ namespace Loscate.App.Utilities
                 return null;
 
 
-            return (messageVm.User == "testUser") ? outgoingDataTemplate : incomingDataTemplate;
+            //return (messageVm.User == userRepository.user.Name) ? outgoingDataTemplate : incomingDataTemplate;
+            return (messageVm.User == userRepository.user.Name) ? incomingDataTemplate : outgoingDataTemplate;
         }
     }
 }

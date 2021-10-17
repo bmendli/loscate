@@ -9,6 +9,7 @@ namespace Loscate.Site.DbContext
     {
         public FirebaseUser()
         {
+            ChatMessages = new HashSet<ChatMessage>();
             DialogUserId1Navigations = new HashSet<Dialog>();
             DialogUserId2Navigations = new HashSet<Dialog>();
         }
@@ -19,6 +20,7 @@ namespace Loscate.Site.DbContext
         public string Email { get; set; }
         public string PictureUrl { get; set; }
 
+        public virtual ICollection<ChatMessage> ChatMessages { get; set; }
         public virtual ICollection<Dialog> DialogUserId1Navigations { get; set; }
         public virtual ICollection<Dialog> DialogUserId2Navigations { get; set; }
     }

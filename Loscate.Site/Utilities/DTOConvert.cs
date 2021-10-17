@@ -28,6 +28,7 @@ namespace Loscate.Site.Utilities
         
         public static DTO.Social.Message ConvertToDto(this DbContext.ChatMessage message)
         {
+            if (message == null) return null;
             return new DTO.Social.Message()
             {
                Text = message.Text,

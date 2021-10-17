@@ -37,11 +37,11 @@ namespace Loscate.Site.DbContext
 
             modelBuilder.Entity<ChatMessage>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Id)
+                    .HasName("ChatMessage_pk")
+                    .IsClustered(false);
 
                 entity.ToTable("ChatMessage");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Text)
                     .IsRequired()
@@ -51,13 +51,13 @@ namespace Loscate.Site.DbContext
                 entity.Property(e => e.Time).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Dialog)
-                    .WithMany()
+                    .WithMany(p => p.ChatMessages)
                     .HasForeignKey(d => d.DialogId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ChatMessage_Dialog_Id_fk");
 
                 entity.HasOne(d => d.SendUser)
-                    .WithMany()
+                    .WithMany(p => p.ChatMessages)
                     .HasForeignKey(d => d.SendUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ChatMessage_FirebaseUser_Id_fk");

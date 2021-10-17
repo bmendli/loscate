@@ -3,70 +3,78 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Loscate.App.ApiRequests.Social.Dialog;
 using Loscate.App.ApiRequests.Social.Message;
 using Loscate.App.Models;
+using Loscate.App.Repository;
 using Loscate.App.Services;
-using Loscate.DTO.Firebase;
+using Nancy.TinyIoc;
 using Xamarin.Forms;
 
 namespace Loscate.App.ViewModels
 {
     [QueryProperty(nameof(CompanionUserUID), nameof(CompanionUserUID))]
     [QueryProperty(nameof(CompanionName), nameof(CompanionName))]
-    public class ChatPageViewModel: INotifyPropertyChanged
+    public class ChatPageViewModel : INotifyPropertyChanged
     {
         private readonly IFirebaseAuthenticator firebaseAuthenticator;
+        private readonly UserRepository userRepository;
         public string CompanionUserUID { get; set; }
         public string CompanionName { get; set; } = "No Name";
         public bool ShowScrollTap { get; set; } = false;
         public bool LastMessageVisible { get; set; } = true;
         public int PendingMessageCount { get; set; } = 0;
-        public bool PendingMessageCountVisible { get { return PendingMessageCount > 0; } }
-
+        
         public Queue<Message> DelayedMessages { get; set; } = new Queue<Message>();
         public ObservableCollection<Message> Messages { get; set; } = new ObservableCollection<Message>();
         public string TextToSend { get; set; }
         public ICommand OnSendCommand { get; set; }
         public ICommand MessageAppearingCommand { get; set; }
         public ICommand MessageDisappearingCommand { get; set; }
-        
+
         public Command LoadMessageCommand { get; }
 
         public ChatPageViewModel()
         {
             firebaseAuthenticator = DependencyService.Get<IFirebaseAuthenticator>();
+            userRepository = TinyIoCContainer.Current.Resolve<UserRepository>();
 
             MessageAppearingCommand = new Command<Message>(OnMessageAppearing);
             MessageDisappearingCommand = new Command<Message>(OnMessageDisappearing);
             LoadMessageCommand = new Command(async () => await ExecuteLoadMessageCommand());
+            OnSendCommand = new Command(async () => await SendMessage());
 
-            OnSendCommand = new Command(() =>
+            Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             {
-                if(!string.IsNullOrEmpty(TextToSend)){
-                    Messages.Insert(0, new Message() { Text = TextToSend, User = "testUser" });
-                    TextToSend = string.Empty;
-                }
+                Task.Run(async () => await CheckNewMessage());
+                return true;
             });
-
-            // Device.StartTimer(TimeSpan.FromSeconds(5), () =>
-            // {
-            //     if (LastMessageVisible)
-            //     {
-            //         Messages.Insert(0, new Message(){ Text = "New message test" , User="Mario"});
-            //     }
-            //     else
-            //     {
-            //         DelayedMessages.Enqueue(new Message() { Text = "New message test" , User = "Mario"});
-            //         PendingMessageCount++;
-            //     }
-            //     return true;
-            // });
         }
-        
-        async Task ExecuteLoadMessageCommand()
+
+        private async Task CheckNewMessage()
+        {
+            var messages = MessageRequests.GetUserMessage(firebaseAuthenticator, CompanionUserUID).Result;
+            if (messages.Count() != Messages.Count)
+            {
+                await ExecuteLoadMessageCommand();
+            }
+            
+        }
+
+        private async Task SendMessage()
+        {
+            if (!string.IsNullOrEmpty(TextToSend))
+            {
+                var sendText = TextToSend;
+                TextToSend = string.Empty;
+                Messages.Insert(0, new Message() { Text = sendText, User = userRepository.user.Name });
+                await MessageRequests.SendMessage(firebaseAuthenticator, CompanionUserUID, sendText);
+            }
+        }
+
+        private async Task ExecuteLoadMessageCommand()
         {
             try
             {
@@ -85,7 +93,7 @@ namespace Loscate.App.ViewModels
         }
 
         public void OnAppearing()
-        {   
+        {
             LoadMessageCommand.Execute(null);
         }
 
@@ -100,6 +108,7 @@ namespace Loscate.App.ViewModels
                     {
                         Messages.Insert(0, DelayedMessages.Dequeue());
                     }
+
                     ShowScrollTap = false;
                     LastMessageVisible = true;
                     PendingMessageCount = 0;
@@ -117,7 +126,6 @@ namespace Loscate.App.ViewModels
                     ShowScrollTap = true;
                     LastMessageVisible = false;
                 });
-
             }
         }
 

@@ -22,15 +22,13 @@ namespace Loscate.App.Droid
     [Activity(Label = "Loscate.App", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize )]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        const int RequestLocationId = 0;
-        GoogleSignInOptions gso;
-        GoogleApiClient googleApiClient;
-        FirebaseAuth firebaseAuth;
-        FirebaseAuthentication firebaseAuthManager;
-
-        IdTokenListener idTokenListener = new IdTokenListener();
-
-        readonly string[] LocationPermissions =
+        private const int RequestLocationId = 0;
+        private GoogleSignInOptions gso;
+        private GoogleApiClient googleApiClient;
+        private FirebaseAuth firebaseAuth;
+        private FirebaseAuthentication firebaseAuthManager;
+        private IdTokenListener idTokenListener = new IdTokenListener();
+        private readonly string[] LocationPermissions =
         {
             Manifest.Permission.AccessCoarseLocation,
             Manifest.Permission.AccessFineLocation
@@ -89,6 +87,7 @@ namespace Loscate.App.Droid
         private void SignOut()
         {
             firebaseAuth.SignOut();
+            Auth.GoogleSignInApi.SignOut(googleApiClient);
         }
 
         private FirebaseAuth GetFirebaseAuth()
