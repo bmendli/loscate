@@ -21,13 +21,16 @@ namespace Loscate.App
 
             
             InitializeComponent();
-            Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
-            Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
             Routing.RegisterRoute(nameof(MapPage), typeof(MapPage));
             Routing.RegisterRoute(nameof(MyProfilePage), typeof(MyProfilePage));
             Routing.RegisterRoute(nameof(DialogsPage), typeof(DialogsPage));
             Routing.RegisterRoute(nameof(ChatPage), typeof(ChatPage));
+            Routing.RegisterRoute(nameof(EditProfilePage), typeof(EditProfilePage));
+            Routing.RegisterRoute(nameof(MyPinsPage), typeof(MyPinsPage));
+            Routing.RegisterRoute(nameof(PinDetailPage), typeof(PinDetailPage));
+            Routing.RegisterRoute(nameof(SearchPinPage), typeof(SearchPinPage));
+            Routing.RegisterRoute(nameof(AddPinPage), typeof(AddPinPage));
+            // await Shell.Current.GoToAsync("..");
         }
-
     }
 }

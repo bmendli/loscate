@@ -32,8 +32,6 @@
     <TabBar>
         <ShellContent Title="Профиль" Icon="profile_ico.png" ContentTemplate="{DataTemplate local:MyProfilePage}" />
         <ShellContent Title="Карта" Icon="map_ico.png" Route="MapPage" ContentTemplate="{DataTemplate local:MapPage}" />
-        <!-- <ShellContent Title="Чат" Icon="chat_ico.png" ContentTemplate="{DataTemplate local:ItemsPage}" /> -->
-        <!-- <ShellContent Title="Чат" Icon="chat_ico.png" ContentTemplate="{DataTemplate local:ChatPage}" /> -->
         <ShellContent Title="Чат" Icon="chat_ico.png" ContentTemplate="{DataTemplate local:DialogsPage}" />
     </TabBar>
 
@@ -44,6 +42,4 @@
     <TabBar>
         <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
     </TabBar>
-
-
 </Shell>

@@ -13,6 +13,8 @@ using Loscate.App.Map;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps.Android;
 using Xamarin.Forms.Maps;
+using Loscate.App.Services;
+using Loscate.App.Droid.Map;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace Loscate.App.Droid
@@ -20,9 +22,11 @@ namespace Loscate.App.Droid
     public class CustomMapRenderer : MapRenderer, GoogleMap.IInfoWindowAdapter
     {
         List<CustomPin> customPins;
+        private MapService mapService;
 
         public CustomMapRenderer(Context context) : base(context)
         {
+            mapService = (MapService)DependencyService.Get<IMapService>();
         }
 
         protected override void OnElementChanged(Xamarin.Forms.Platform.Android.ElementChangedEventArgs<Xamarin.Forms.Maps.Map> e)
@@ -85,13 +89,7 @@ namespace Loscate.App.Droid
                 throw new Exception("Custom pin not found");
             }
 
-            if (!string.IsNullOrWhiteSpace(customPin.Url))
-            {
-                var url = Android.Net.Uri.Parse(customPin.Url);
-                var intent = new Intent(Intent.ActionView, url);
-                intent.AddFlags(ActivityFlags.NewTask);
-                Android.App.Application.Context.StartActivity(intent);
-            }
+            mapService.Invoke(customPin);
         }
 
         public Android.Views.View GetInfoContents(Marker marker)

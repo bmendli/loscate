@@ -7,6 +7,7 @@
              x:Class="Loscate.App.Views.MyProfilePage"
              Title="Мой профиль">
     <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="editIco.png" Command="{Binding EditAccountCommand}" />
         <ToolbarItem IconImageSource="logout.png" Command="{Binding SignOutCommand}" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -14,6 +15,7 @@
             <xct:AvatarView CornerRadius="60" Size="100" Text="{Binding UserRepository.user.EMail}" Source="{Binding UserRepository.user.PictureUrl}" HorizontalOptions="Center"/>
             <Label Text="{Binding UserRepository.user.Name}" HorizontalOptions="CenterAndExpand" />
             <Label Text="{Binding UserRepository.user.EMail, StringFormat='Email: {0}'}" HorizontalOptions="Start" />
+            <Button Text="Мои метки" Command="{Binding OpenMyPinsCommand}"></Button>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

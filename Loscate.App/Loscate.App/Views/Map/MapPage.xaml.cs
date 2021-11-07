@@ -1,4 +1,7 @@
 ﻿using Loscate.App.Map;
+using Loscate.App.Models;
+using Loscate.App.Services;
+using Loscate.App.ViewModels;
 using Loscate.DTO.Map;
 using System.Collections.Generic;
 using System.Reflection;
@@ -9,9 +12,12 @@ namespace Loscate.App.Views
 {
     public partial class MapPage : ContentPage
     {
+        private IMapService mapService;
         public MapPage()
         {
             InitializeComponent();
+            mapService = DependencyService.Get<IMapService>();
+            mapService.OnPinClickSubscribe(OnPinClick);
 
             CustomMap customMap = new CustomMap
             {
@@ -34,6 +40,11 @@ namespace Loscate.App.Views
             customMap.CustomPins = new List<CustomPin> { pin };
             customMap.Pins.Add(pin);
             customMap.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(1.0)));
+        }
+
+        private void OnPinClick(CustomPin pin)
+        {
+            Shell.Current.GoToAsync($"{nameof(PinDetailPage)}?{nameof(PinDetailViewModel.Name)}={pin.Name}");
         }
     }
 }

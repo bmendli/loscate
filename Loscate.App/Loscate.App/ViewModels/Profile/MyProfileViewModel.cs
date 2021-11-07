@@ -17,11 +17,26 @@ namespace Loscate.App.ViewModels
 
         private IFirebaseAuthenticator firebaseAuth;
         public Command SignOutCommand { get; }
-        
+        public Command EditAccountCommand { get; }
+
+        public Command OpenMyPinsCommand { get; }
+
         public MyProfileViewModel()
         {
             UserRepository = TinyIoCContainer.Current.Resolve<UserRepository>();
             SignOutCommand = new Command(SignOut);
+            EditAccountCommand = new Command(EditAccount);
+            OpenMyPinsCommand = new Command(OpenMyPins);
+        }
+
+        private async void EditAccount()
+        {
+            await Shell.Current.GoToAsync($"{nameof(EditProfilePage)}");
+        }
+
+        private async void OpenMyPins()
+        {
+            await Shell.Current.GoToAsync($"{nameof(MyPinsPage)}");
         }
 
         private void SignOut()

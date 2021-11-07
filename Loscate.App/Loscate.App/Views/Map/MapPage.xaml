@@ -4,9 +4,15 @@
              x:Class="Loscate.App.Views.MapPage"
              xmlns:vm="clr-namespace:Loscate.App.ViewModels" 
              xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
-             xmlns:local="clr-namespace:Loscate.App.Map;assembly=Loscate.App"
+             xmlns:local="clr-namespace:Loscate.App.Map;assembly=Loscate.App" 
+             x:DataType="vm:MapViewModel"
              Title="Карта">
-    
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="searchIco.png" Command="{Binding SearchCommand}" Order="Primary" />
+        <ToolbarItem IconImageSource="addIco.png" Command="{Binding AddPinCommand}" />
+    </ContentPage.ToolbarItems>
+
     <ContentPage.BindingContext>
         <vm:MapViewModel />
     </ContentPage.BindingContext>
