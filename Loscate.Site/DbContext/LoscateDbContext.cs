@@ -20,6 +20,7 @@ namespace Loscate.Site.DbContext
         public virtual DbSet<ChatMessage> ChatMessages { get; set; }
         public virtual DbSet<Dialog> Dialogs { get; set; }
         public virtual DbSet<FirebaseUser> FirebaseUsers { get; set; }
+        public virtual DbSet<Pin> Pins { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -109,6 +110,44 @@ namespace Loscate.Site.DbContext
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("UID");
+            });
+
+            modelBuilder.Entity<Pin>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("Pin_pk")
+                    .IsClustered(false);
+
+                entity.ToTable("Pin");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.FullName)
+                    .HasMaxLength(500)
+                    .IsUnicode(false)
+                    .HasColumnName("fullName");
+
+                entity.Property(e => e.Latitude).HasColumnName("latitude");
+
+                entity.Property(e => e.Longitude).HasColumnName("longitude");
+
+                entity.Property(e => e.Photo)
+                    .IsUnicode(false)
+                    .HasColumnName("photo");
+
+                entity.Property(e => e.ShortName)
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("shortName");
+
+                entity.Property(e => e.UserId).HasColumnName("userId");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Pins)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Pin_FirebaseUser_Id_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);

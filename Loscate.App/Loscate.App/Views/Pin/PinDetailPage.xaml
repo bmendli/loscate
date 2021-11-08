@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:viewmodels="clr-namespace:Loscate.App.ViewModels" x:DataType="viewmodels:PinDetailViewModel"
              x:Class="Loscate.App.Views.PinDetailPage"
-             Title="{Binding Name}">
+             Title="{Binding ShortName}">
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Xamarin.Forms!"

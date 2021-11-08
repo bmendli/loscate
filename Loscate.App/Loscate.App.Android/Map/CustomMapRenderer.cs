@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Loscate.DTO.Map;
 using System.Net;
 using Android.Content;
 using Android.Gms.Maps;
@@ -15,13 +14,14 @@ using Xamarin.Forms.Maps.Android;
 using Xamarin.Forms.Maps;
 using Loscate.App.Services;
 using Loscate.App.Droid.Map;
+using Pin = Xamarin.Forms.Maps.Pin;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace Loscate.App.Droid
 {
     public class CustomMapRenderer : MapRenderer, GoogleMap.IInfoWindowAdapter
     {
-        List<CustomPin> customPins;
+        public List<CustomPin> customPins;
         private MapService mapService;
 
         public CustomMapRenderer(Context context) : base(context)
@@ -61,8 +61,17 @@ namespace Loscate.App.Droid
             marker.SetTitle(pin.Label);
             marker.SetSnippet(pin.Address);
 
-            marker.SetIcon(BitmapDescriptorFactory.FromBitmap(GetImageBitmapFromUrl(((CustomPin)pin).IcoUrl)));
+            //TODO
+           // var img = ((CustomPin)pin).Photo != null ? DecodeImage(((CustomPin)pin).Photo) : GetImageBitmapFromUrl("https://www.spbstu.ru/upload/branding/logo_vert.png");
+           var img = GetImageBitmapFromUrl("https://www.spbstu.ru/upload/branding/logo_vert.png");
+
+            marker.SetIcon(BitmapDescriptorFactory.FromBitmap(img));
             return marker;
+        }
+
+        private Bitmap DecodeImage(byte[] img)
+        {
+            return BitmapFactory.DecodeByteArray(img, 0, img.Length);
         }
 
         private Bitmap GetImageBitmapFromUrl(string url)
@@ -74,7 +83,7 @@ namespace Loscate.App.Droid
                 var imageBytes = webClient.DownloadData(url);
                 if (imageBytes != null && imageBytes.Length > 0)
                 {
-                    imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+                    imageBitmap = DecodeImage(imageBytes);
                 }
             }
 

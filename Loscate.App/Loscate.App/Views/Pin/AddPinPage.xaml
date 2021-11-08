@@ -1,12 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Loscate.App.Views.AddPinPage">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewmodels="clr-namespace:Loscate.App.ViewModels" 
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             x:DataType="viewmodels:AddPinViewModel"
+             x:Class="Loscate.App.Views.AddPinPage"
+             Title="Добавить метку">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="10">
+            <Label Text="Фото:" HorizontalOptions="Center" FontSize="Medium" IsVisible="{Binding ElementsVisible}"/>
+            <Frame BorderColor="Gray" CornerRadius="10" HorizontalOptions="Center" IsVisible="{Binding ElementsVisible}">
+                <Image Source="{Binding SelectImg}" 
+                       Aspect="AspectFill"
+                       HeightRequest="100"
+                       WidthRequest="100"
+                       HorizontalOptions="Center" 
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SelectPhotoCommand}" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Frame>
+            <Label Text="Краткое описание:" HorizontalOptions="Start" FontSize="Medium" Padding="0,15,0,0" IsVisible="{Binding ElementsVisible}"/>
+            <Entry MaxLength="30" Text="{Binding ShortText}" IsVisible="{Binding ElementsVisible}"/>
+            <Label Text="Подробное описание:" HorizontalOptions="Start" FontSize="Medium" IsVisible="{Binding ElementsVisible}"/>
+            <Editor MaxLength="500" HeightRequest="75" AutoSize="TextChanges" Text="{Binding FullText}" IsVisible="{Binding ElementsVisible}"/>
+            <StackLayout Orientation="Horizontal" HeightRequest="50" IsVisible="{Binding ElementsVisible}">
+                <Label Text="Геометка:" FontSize="Medium" WidthRequest="100"/>
+                <Image Source="map_ico.png" VerticalOptions="Start">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddGeoTagCommand}" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Text="{Binding AddresName}"/>
+            </StackLayout>
+            <maps:Map IsShowingUser="True" HeightRequest="400" IsVisible="{Binding MapVisible}" MapClicked="Map_MapClicked"/>
+            <Button Text="Добавить" Command="{Binding AddPinCommand}" IsVisible="{Binding ElementsVisible}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

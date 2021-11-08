@@ -12,6 +12,7 @@ namespace Loscate.Site.DbContext
             ChatMessages = new HashSet<ChatMessage>();
             DialogUserId1Navigations = new HashSet<Dialog>();
             DialogUserId2Navigations = new HashSet<Dialog>();
+            Pins = new HashSet<Pin>();
         }
 
         public int Id { get; set; }
@@ -23,5 +24,6 @@ namespace Loscate.Site.DbContext
         public virtual ICollection<ChatMessage> ChatMessages { get; set; }
         public virtual ICollection<Dialog> DialogUserId1Navigations { get; set; }
         public virtual ICollection<Dialog> DialogUserId2Navigations { get; set; }
+        public virtual ICollection<Pin> Pins { get; set; }
     }
 }
