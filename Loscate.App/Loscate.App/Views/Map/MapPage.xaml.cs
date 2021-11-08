@@ -13,38 +13,34 @@ namespace Loscate.App.Views
     public partial class MapPage : ContentPage
     {
         private IMapService mapService;
+        
         public MapPage()
         {
             InitializeComponent();
-            mapService = DependencyService.Get<IMapService>();
-            mapService.OnPinClickSubscribe(OnPinClick);
+            this.BindingContext = new MapViewModel(Map);
+           
 
-            CustomMap customMap = new CustomMap
-            {
-                MapType = MapType.Street,
-                IsShowingUser = true
-            };
+            // CustomMap customMap = new CustomMap
+            // {
+            //     MapType = MapType.Street,
+            //     IsShowingUser = true
+            // };
+            //
+            // Content = customMap;
 
-            Content = customMap;
-
-            CustomPin pin = new CustomPin
-            {
-                Type = PinType.Place,
-                Position = new Position(60.01001948251575, 30.374142388879566),
-                Label = "SPBSTU",
-                Address = "Санкт-Петербург Политехническая ул., 29",
-                Name = "Санкт-Петербургский Политехнический Университет Петра Великого",
-                Url = "https://www.spbstu.ru/",
-                IcoUrl = "https://www.spbstu.ru/upload/branding/logo_vert.png"
-            };
-            customMap.CustomPins = new List<CustomPin> { pin };
-            customMap.Pins.Add(pin);
-            customMap.MoveToRegion(MapSpan.FromCenterAndRadius(pin.Position, Distance.FromMiles(1.0)));
-        }
-
-        private void OnPinClick(CustomPin pin)
-        {
-            Shell.Current.GoToAsync($"{nameof(PinDetailPage)}?{nameof(PinDetailViewModel.Name)}={pin.Name}");
+            // CustomPin pin = new CustomPin
+            // {
+            //     Type = PinType.Place,
+            //     Position = new Position(60.01001948251575, 30.374142388879566),
+            //     Label = "SPBSTU",
+            //     Address = "Санкт-Петербург Политехническая ул., 29",
+            //     Name = "Санкт-Петербургский Политехнический Университет Петра Великого",
+            //     Url = "https://www.spbstu.ru/",
+            //     IcoUrl = "https://www.spbstu.ru/upload/branding/logo_vert.png"
+            // };
+           // customMap.CustomPins = new List<CustomPin> { pin };
+           // customMap.Pins.Add(pin);
+          //  customMap.MoveToRegion(MapSpan.FromCenterAndRadius(startPosition, Distance.FromMiles(1.0)));
         }
     }
 }

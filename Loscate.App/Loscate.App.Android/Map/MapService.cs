@@ -1,6 +1,7 @@
 ﻿using Loscate.App.Services;
 using Loscate.DTO.Map;
 using System;
+using Loscate.App.Map;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(Loscate.App.Droid.Map.MapService))]

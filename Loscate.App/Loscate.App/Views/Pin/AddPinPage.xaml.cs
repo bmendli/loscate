@@ -13,10 +13,16 @@ namespace Loscate.App.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddPinPage : ContentPage
     {
+        private readonly AddPinViewModel addPinViewModel;
         public AddPinPage()
         {
             InitializeComponent();
-            this.BindingContext = new AddPinViewModel();
+            this.BindingContext = addPinViewModel = new AddPinViewModel();
+        }
+
+        private void Map_MapClicked(object sender, Xamarin.Forms.Maps.MapClickedEventArgs e)
+        {
+            addPinViewModel.MapClick(e.Position);
         }
     }
 }

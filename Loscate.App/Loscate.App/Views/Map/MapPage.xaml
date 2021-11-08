@@ -12,14 +12,11 @@
         <ToolbarItem IconImageSource="searchIco.png" Command="{Binding SearchCommand}" Order="Primary" />
         <ToolbarItem IconImageSource="addIco.png" Command="{Binding AddPinCommand}" />
     </ContentPage.ToolbarItems>
-
-    <ContentPage.BindingContext>
-        <vm:MapViewModel />
-    </ContentPage.BindingContext>
-
+    
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="Accent">#96d1ff</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
+    <local:CustomMap x:Name="Map"></local:CustomMap>
 </ContentPage>

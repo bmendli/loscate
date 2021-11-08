@@ -7,6 +7,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Authenticators;
 
 namespace Loscate.App.Utilities
 {
@@ -27,6 +29,23 @@ namespace Loscate.App.Utilities
             var request = new ApiRequest(firebaseAuthenticator, url);
             var responseJson = await request.Run();
             return JsonConvert.DeserializeObject<T>(responseJson);
+        }
+
+        public static async Task<T> MakePostRequest<T>(IFirebaseAuthenticator firebaseAuthenticator, string url, Dictionary<string, string> values)
+        {
+            var client = new RestClient($"https://loscate.site");
+            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(firebaseAuthenticator.GetAuthToken(), "Bearer");
+
+            var request = new RestRequest(url);
+
+            foreach(var val in values)
+            {
+                request.AddParameter(val.Key, val.Value);
+            }
+            var response = client.Post(request);
+            var content = response.Content; // Raw content as string
+
+            return JsonConvert.DeserializeObject<T>(content);
         }
 
         public async Task<string> Run()
