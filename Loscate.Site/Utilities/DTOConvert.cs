@@ -16,7 +16,8 @@ namespace Loscate.Site.Utilities
                 ShortName = pin.ShortName,
                 FullName = pin.FullName,
                 PhotoBase64 = pin.Photo,
-                Id = pin.Id
+                Id = pin.Id,
+                UserUID = pin.User.Uid
             };
         }
         

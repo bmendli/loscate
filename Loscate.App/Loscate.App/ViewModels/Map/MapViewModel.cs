@@ -9,6 +9,7 @@ using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using System.Threading.Tasks;
+using Loscate.App.Repository;
 
 namespace Loscate.App.ViewModels
 {
@@ -16,6 +17,8 @@ namespace Loscate.App.ViewModels
     {
         public Command AddPinCommand { get; }
         public Command SearchCommand { get; }
+        
+        public Command RefreshCommand { get; }
 
         private readonly CustomMap map;
         private readonly IFirebaseAuthenticator firebaseAuthenticator;
@@ -31,6 +34,7 @@ namespace Loscate.App.ViewModels
             OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
             SearchCommand = new Command(OpenSearchPage);
             AddPinCommand = new Command(OpenAddPinPage);
+            RefreshCommand = new Command(LoadPins);
 
             map.MoveToRegion(MapSpan.FromCenterAndRadius(startPosition, Distance.FromMiles(1.0)));
 
@@ -43,8 +47,10 @@ namespace Loscate.App.ViewModels
             var res = task.Result;
             var customPins = res.Select(ConvertPin).ToList();
 
+            map.Pins.Clear();
+            
             map.CustomPins = new List<CustomPin>(customPins);
-            map.Pins.Add(customPins[0]);
+
             customPins.ForEach(p => map.Pins.Add(p));
         }
 
@@ -56,7 +62,8 @@ namespace Loscate.App.ViewModels
                 ShortName = pin.ShortName,
                 FullName = pin.FullName,
                 Photo = pin.PhotoBase64,
-                Label = pin.ShortName
+                Label = pin.ShortName,
+                UserUID = pin.UserUID
             };
         }
 
@@ -71,10 +78,15 @@ namespace Loscate.App.ViewModels
         }
 
         public ICommand OpenWebCommand { get; }
-        
+
         private void OnPinClick(CustomPin pin)
         {
-            Shell.Current.GoToAsync($"{nameof(PinDetailPage)}?{nameof(PinDetailViewModel.ShortName)}={pin.ShortName}");
+            PhotoBase64DTO.PhotoBase64 = pin.Photo;
+
+            Shell.Current.GoToAsync($"{nameof(PinDetailPage)}?" +
+                $"{nameof(PinDetailViewModel.ShortName)}={pin.ShortName}&" +
+                $"{nameof(PinDetailViewModel.FullName)}={pin.FullName}&" +
+                $"{nameof(PinDetailViewModel.UserUID)}={pin.UserUID}");
         }
     }
 }

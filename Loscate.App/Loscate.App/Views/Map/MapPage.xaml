@@ -9,6 +9,7 @@
              Title="Карта">
 
     <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="refreshIco.png" Command="{Binding RefreshCommand}" Order="Primary" />
         <ToolbarItem IconImageSource="searchIco.png" Command="{Binding SearchCommand}" Order="Primary" />
         <ToolbarItem IconImageSource="addIco.png" Command="{Binding AddPinCommand}" />
     </ContentPage.ToolbarItems>

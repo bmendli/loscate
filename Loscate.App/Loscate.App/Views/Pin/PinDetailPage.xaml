@@ -1,14 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:viewmodels="clr-namespace:Loscate.App.ViewModels" x:DataType="viewmodels:PinDetailViewModel"
+             xmlns:viewmodels="clr-namespace:Loscate.App.ViewModels" 
+             x:DataType="viewmodels:PinDetailViewModel"
              x:Class="Loscate.App.Views.PinDetailPage"
              Title="{Binding ShortName}">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="10">
+            <Label Text="Фото:" HorizontalOptions="Center" FontSize="Medium"/>
+            <Frame BorderColor="Gray" CornerRadius="10" HorizontalOptions="Center">
+                <Image Source="{Binding Img}" 
+                       Aspect="AspectFill"
+                       HeightRequest="100"
+                       WidthRequest="100"
+                       HorizontalOptions="Center">
+                </Image>
+            </Frame>
+            <Label Text="Подробное описание:" HorizontalOptions="Start" FontSize="Medium"/>
+            <Label HeightRequest="200" Text="{Binding FullName}"/>
+            <Button Text="Написать" Command="{Binding WriteMessageCommand}" IsVisible="{Binding VisibleWriteButton}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

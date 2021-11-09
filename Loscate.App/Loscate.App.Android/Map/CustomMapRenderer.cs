@@ -61,12 +61,32 @@ namespace Loscate.App.Droid
             marker.SetTitle(pin.Label);
             marker.SetSnippet(pin.Address);
 
-            //TODO
-           // var img = ((CustomPin)pin).Photo != null ? DecodeImage(((CustomPin)pin).Photo) : GetImageBitmapFromUrl("https://www.spbstu.ru/upload/branding/logo_vert.png");
-           var img = GetImageBitmapFromUrl("https://www.spbstu.ru/upload/branding/logo_vert.png");
 
-            marker.SetIcon(BitmapDescriptorFactory.FromBitmap(img));
+
+            var bitmap = BitmapFactory.DecodeStream(new MemoryStream(Convert.FromBase64String((((CustomPin)pin).Photo))));
+            var scaleBitmap = Bitmap.CreateScaledBitmap(bitmap, 150, 150, false);
+            marker.SetIcon(BitmapDescriptorFactory.FromBitmap(GetBitmapClippedCircle(scaleBitmap)));
             return marker;
+        }
+
+        public static Bitmap GetBitmapClippedCircle(Bitmap bitmap)
+        {
+
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            Bitmap outputBitmap = Bitmap.CreateBitmap(width, height, Bitmap.Config.Argb8888);
+
+            Android.Graphics.Path path = new Android.Graphics.Path();
+            path.AddCircle(
+                      (float)(width / 2)
+                    , (float)(height / 2)
+                    , (float)Math.Min(width, (height / 2))
+                    , Android.Graphics.Path.Direction.Ccw);
+
+            Canvas canvas = new Canvas(outputBitmap);
+            canvas.ClipPath(path);
+            canvas.DrawBitmap(bitmap, 0, 0, null);
+            return outputBitmap;
         }
 
         private Bitmap DecodeImage(byte[] img)
@@ -118,15 +138,10 @@ namespace Loscate.App.Droid
 
 
                 var infoTitle = view.FindViewById<TextView>(Resource.Id.InfoWindowTitle);
-                var infoSubtitle = view.FindViewById<TextView>(Resource.Id.InfoWindowSubtitle);
 
                 if (infoTitle != null)
                 {
                     infoTitle.Text = marker.Title;
-                }
-                if (infoSubtitle != null)
-                {
-                    infoSubtitle.Text = marker.Snippet;
                 }
 
                 return view;

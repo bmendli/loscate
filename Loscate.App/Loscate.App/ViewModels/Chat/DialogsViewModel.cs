@@ -82,11 +82,8 @@ namespace Loscate.App.ViewModels
         {
             if (dialog == null)
                 return;
-
-            // This will push the ItemDetailPage onto the navigation stack
-           // await Shell.Current.GoToAsync($"{nameof(ChatPage)}?{nameof(ChatPageViewModel.CompanionUser)}={dialog.Companion}");
+            
            await Shell.Current.GoToAsync($"{nameof(ChatPage)}?{nameof(ChatPageViewModel.CompanionUserUID)}={dialog.Companion.UID}&{nameof(ChatPageViewModel.CompanionName)}={dialog.Companion.Name}");
-           //TODO
         }
     }
 }

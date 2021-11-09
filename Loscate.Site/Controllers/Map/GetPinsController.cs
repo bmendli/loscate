@@ -4,6 +4,7 @@ using Loscate.Site.DbContext;
 using Loscate.Site.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Pin = Loscate.DTO.Map.Pin;
 
 namespace Loscate.Site.Controllers.Map
@@ -22,7 +23,7 @@ namespace Loscate.Site.Controllers.Map
         [HttpGet]
         public List<Pin> Get()
         {
-            return loscateDbContext.Pins.ToList().Select(pin => pin.ConvertToDto()).ToList();
+            return loscateDbContext.Pins.Include(p=>p.User).ToList().Select(pin => pin.ConvertToDto()).ToList();
         }
     }
 }
